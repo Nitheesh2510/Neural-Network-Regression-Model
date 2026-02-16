@@ -17,7 +17,7 @@ Since the output (Spending Score) is a continuous numerical value, the problem i
 A Neural Network Regression Model is used to learn the relationship between age and spending score.
 ```
 ## Neural Network Model
-<img width="1134" height="647" alt="418446260-84093ee0-48a5-4bd2-b78d-5d8ee258d189" src="https://github.com/user-attachments/assets/f9a07d0f-c01e-4a3b-9ac3-bd8751e0f6cc" />
+<img width="1147" height="708" alt="image" src="https://github.com/user-attachments/assets/429f9ebc-d807-4d12-bc29-996de4628bca" />
 
 ## DESIGN STEPS
 
