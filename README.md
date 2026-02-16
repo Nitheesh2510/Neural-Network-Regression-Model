@@ -144,9 +144,9 @@ print(f"Predicted Spending Score: {prediction}")
 <img width="601" height="595" alt="image" src="https://github.com/user-attachments/assets/0e379cd1-b1bf-47f4-9afe-14095a54caba" />
 
 ### New Sample Data Prediction
-<img width="613" height="243" alt="image" src="https://github.com/user-attachments/assets/49251c6c-7e0c-4070-8c12-a58ff673ab3e" />
+<img width="648" height="330" alt="image" src="https://github.com/user-attachments/assets/06ee59eb-1c97-4253-bb2b-c9d6a149f98a" />
 
-<img width="715" height="97" alt="image" src="https://github.com/user-attachments/assets/907fac51-67e8-45f2-a8ed-c99c174fd495" />
+<img width="1080" height="202" alt="image" src="https://github.com/user-attachments/assets/0fded207-2631-4ced-8c3a-a4a62561dcbf" />
 
 ## RESULT
 
