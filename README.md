@@ -136,7 +136,7 @@ print(f"Predicted Spending Score: {prediction}")
 ```
 ## Dataset Information
 
-<img width="954" height="669" alt="image" src="https://github.com/user-attachments/assets/1cb1b3fe-aa46-4899-b50b-3572dadcd3e2" />
+<img width="220" height="409" alt="image" src="https://github.com/user-attachments/assets/37d4f50a-fa6d-4a25-875a-31e8d3b92269" />
 
 ## OUTPUT
 
