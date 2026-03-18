@@ -2,89 +2,91 @@
 
 ## AIM
 
-To develop a Neural Network–based regression model for predicting the spending score of customers using the given dataset.
+To develop a neural network regression model for the given dataset.
 
 ## THEORY
-```
-Problem Statement Explanation:
 
-An automobile company wants to understand customer behavior based on demographic features such as Age.
-The Spending Score represents how actively a customer spends money. Predicting this score helps the company:
--Analyze customer purchasing behavior
--Design personalized offers
--Improve marketing strategies
-Since the output (Spending Score) is a continuous numerical value, the problem is treated as a regression problem.
-A Neural Network Regression Model is used to learn the relationship between age and spending score.
-```
+This code builds and trains a feedforward neural network in PyTorch for a regression task.
+The model takes a single input feature, passes it through two hidden layers with ReLU activation, and predicts one continuous output.
+It uses MSE loss and RMSProp optimizer to minimize the error between predictions and actual values over training epochs.
+
 ## Neural Network Model
-<img width="1147" height="708" alt="image" src="https://github.com/user-attachments/assets/429f9ebc-d807-4d12-bc29-996de4628bca" />
+
+<img width="1073" height="691" alt="image" src="https://github.com/user-attachments/assets/0c9a3477-784c-4316-baef-11c35368797d" />
 
 ## DESIGN STEPS
 
-### STEP 1: Loading the Dataset
-The customer dataset is loaded using the Pandas library.
+### STEP 1:
 
-### STEP 2: Splitting the Dataset
-The dataset is split into training data and testing data to evaluate model performance.
+Loading the dataset
 
-### STEP 3: Data Scaling
-MinMaxScaler is used to normalize the input values between 0 and 1.
+### STEP 2:
 
-### STEP 4: Building the Neural Network Model
-A feedforward neural network is created using PyTorch with linear layers and ReLU activation.
+Split the dataset into training and testing
 
-### STEP 5: Training the Model
-The model is trained using Mean Squared Error loss and RMSprop optimizer.
+### STEP 3:
 
-### STEP 6: Plotting the Performance
-Training loss is plotted against epochs to visualize learning behavior.
+Create MinMaxScalar objects ,fit the model and transform the data.
 
-### STEP 7: Model Evaluation
-The trained model is evaluated using test data and test loss is calculated.
+### STEP 4:
+
+Build the Neural Network Model and compile the model.
+
+### STEP 5:
+
+Train the model with the training data.
+
+### STEP 6:
+
+Plot the performance plot
+
+### STEP 7:
+
+Evaluate the model with the testing data.
 
 ## PROGRAM
-
-### Name: Nitheesh kumar B
+### Name:NITHEESH KUMAR B
 ### Register Number: 212224230189
-
 ```python
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
 
-# Load Dataset
-dataset1 = pd.read_csv('customers.csv')
 
-X = dataset1[['Age']].values
-y = dataset1[['Spending_Score']].values
+dataset = pd.read_excel(r"/content/dataset 1.xlsx", header=None)
+dataset.columns = ['INPUT', 'OUTPUT']
 
-# Train-Test Split
+X = dataset[['INPUT']].values
+y = dataset[['OUTPUT']].values
+
+
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.33, random_state=33
 )
 
-# Scaling
+
 scaler = MinMaxScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# Convert to Tensors
 X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
-X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
+y_train_tensor = torch.tensor(y_train, dtype=torch.float32).view(-1, 1)
 
-# Neural Network Model
+X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
+y_test_tensor = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
+
 class NeuralNet(nn.Module):
     def __init__(self):
         super().__init__()
+
         self.fc1 = nn.Linear(1, 8)
         self.fc2 = nn.Linear(8, 10)
         self.fc3 = nn.Linear(10, 1)
+
         self.relu = nn.ReLU()
         self.history = {'loss': []}
 
@@ -94,60 +96,79 @@ class NeuralNet(nn.Module):
         x = self.fc3(x)
         return x
 
-# Initialize Model, Loss and Optimizer
+
 ai_brain = NeuralNet()
 criterion = nn.MSELoss()
 optimizer = optim.RMSprop(ai_brain.parameters(), lr=0.001)
 
-# Training Function
-def train_model(ai_brain, X_train, y_train, criterion, optimizer, epochs=2000):
+
+
+def train_model(model, X_train, y_train, criterion, optimizer, epochs=2000):
+
     for epoch in range(epochs):
         optimizer.zero_grad()
-        loss = criterion(ai_brain(X_train), y_train)
+
+        output = model(X_train)
+        loss = criterion(output, y_train)
+
         loss.backward()
         optimizer.step()
-        ai_brain.history['loss'].append(loss.item())
+
+        model.history['loss'].append(loss.item())
 
         if epoch % 200 == 0:
             print(f"Epoch [{epoch}/{epochs}], Loss: {loss.item():.6f}")
 
-# Train the Model
+
+
 train_model(ai_brain, X_train_tensor, y_train_tensor, criterion, optimizer)
 
-# Test Evaluation
+
+
 with torch.no_grad():
     test_loss = criterion(ai_brain(X_test_tensor), y_test_tensor)
     print(f"Test Loss: {test_loss.item():.6f}")
 
-# Plot Loss
+
+
 loss_df = pd.DataFrame(ai_brain.history)
+
 loss_df.plot()
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
-plt.title("Training Loss vs Epochs")
+plt.title("Loss during Training")
 plt.show()
 
-# New Sample Prediction
-X_new = torch.tensor([[9]], dtype=torch.float32)
-X_new_scaled = torch.tensor(scaler.transform(X_new), dtype=torch.float32)
 
-prediction = ai_brain(X_new_scaled).item()
-print(f"Predicted Spending Score: {prediction}")
+X_new = torch.tensor([[9]], dtype=torch.float32)
+
+X_new_scaled = scaler.transform(X_new)
+X_new_tensor = torch.tensor(X_new_scaled, dtype=torch.float32)
+
+prediction = ai_brain(X_new_tensor).item()
+
+print(f"Prediction: {prediction}")
+
 ```
 ## Dataset Information
 
-<img width="220" height="409" alt="image" src="https://github.com/user-attachments/assets/37d4f50a-fa6d-4a25-875a-31e8d3b92269" />
+<img width="280" height="476" alt="image" src="https://github.com/user-attachments/assets/698055ed-1bd3-403f-9964-aaee5f9502ae" />
 
 ## OUTPUT
+![alt text](img/image.png)
 
 ### Training Loss Vs Iteration Plot
-<img width="601" height="595" alt="image" src="https://github.com/user-attachments/assets/0e379cd1-b1bf-47f4-9afe-14095a54caba" />
+
+![alt text](img/image-1.png)
 
 ### New Sample Data Prediction
-<img width="648" height="330" alt="image" src="https://github.com/user-attachments/assets/06ee59eb-1c97-4253-bb2b-c9d6a149f98a" />
-
-<img width="1080" height="202" alt="image" src="https://github.com/user-attachments/assets/0fded207-2631-4ced-8c3a-a4a62561dcbf" />
+```
+X_n1_1 = torch.tensor([[9]], dtype=torch.float32)
+prediction = santho(torch.tensor(scaler.transform(X_n1_1), dtype=torch.float32)).item()
+print(f'Prediction: {prediction}')
+```
+![alt text](img/image-2.png)
 
 ## RESULT
 
-The neural network regression model was successfully trained and evaluated. The model demonstrated strong predictive performance on unseen data, with a low error rate.
+Successfully executed the code to develop a neural network regression model.
